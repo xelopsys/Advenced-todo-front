@@ -1,20 +1,15 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useState, useEffect, Fragment, useRef } from 'react'
 import TodoList from './TodoList'
 import axios from 'axios'
 import qs from 'qs'
 
 async function getServerSideProps() {
     const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
-    // console.log(todos)
     const todo = todos.data
     return todo.reverse()
 }
 
 export default function AddTodo({ setTodo }) {
-
-
-    // console.log(idList())
-    // const [todos, setTodos] = useState([])
     const [id, setId] = useState(1)
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
@@ -22,8 +17,6 @@ export default function AddTodo({ setTodo }) {
 
 
     const handleClick = async () => {
-
-        // console.log(todo)
         if (title || content) {
 
             await axios('http://localhost:3002/todo/create', {
@@ -43,21 +36,15 @@ export default function AddTodo({ setTodo }) {
                 .catch(err => console.log(err.message))
 
         }
-
         setTitle("")
         setContent("")
-
-
-
     }
 
     useEffect(() => {
         async function fetchData() {
             await axios.get('http://localhost:3002/todo')
                 .then(res => {
-                    // setId(res.data.data.length + 1)
                     setId(res.data.data.length > 0 ? Math.max(...res.data.data.map(item => item.id)) + 1 : 1)
-
                 })
         }
         fetchData()
@@ -101,46 +88,24 @@ export default function AddTodo({ setTodo }) {
 
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        // console.log(todo)
-    }
+
 
 
     const handleChange = (e) => {
         if (e.target.name === 'title') {
             setTitle(e.target.value)
-            // console.log(title)
         } else {
             setContent(e.target.value)
-            // console.log(content)
-
         }
     }
 
-    // const handleUpdate = async (id) => {
-    //     await axios('http://localhost:3002/todo/update', {
-    //         method: 'PUT',
-    //         headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    //         data: qs.stringify({
-    //             id: id,
-    //             title: title,
-    //             content: content
-    //         }),
-    //     }).then(async (res) => {
-    //         setTodo(await getServerSideProps())
-    //         // console.log(res)
-    //     })
-    // }
-
     return (
         <Fragment>
-            <form onSubmit={handleSubmit}>
-                <span>{id}</span>
-                <input name="title" value={title} onChange={handleChange} placeholder="title" />
-                <input name="content" value={content} onChange={handleChange} placeholder="content" />
-                <button type="submit" onClick={handleClick}>
-                    {/* <a href="/">Add</a> */}
+            <form className='w-11/12 h-full flex flex-col justify-center items-center sm:flex-col md:flex-row lg:flex-col' onSubmit={(e) => { e.preventDefault() }}>
+                <span className='w-12 h-12 rounded-full bg-red-500 text-white flex flex-row justify-center items-center mx-6 p-2'>{id}</span>
+                <input className='w-full h-12 border-b p-4 m-2 focus:outline-red-500' name="title" value={title} onChange={handleChange} placeholder="title" />
+                <input className='w-full h-12  p-4 m-2 focus:outline-red-500' name="content" value={content} onChange={handleChange} placeholder="content" />
+                <button type="submit" className=' rounded w-1/2 h-12 p-4 m-2 shadow-lg bg-red-500 hover:bg-red-900 flex flex-row justify-center items-center text-white' onClick={handleClick}>
                     Add
                 </button>
             </form>

@@ -1,7 +1,3 @@
-// import { process_params } from 'express/lib/router'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import AddTodo from '../components/AddTodo'
 import TodoList from '../components/TodoList'
 import axios from 'axios'
@@ -37,12 +33,18 @@ export default function Home({ todo }) {
 
   // console.log('TODODS:', todos)
   return (
-    <div className='text-md w-screen h-full  flex flex-col justify-center items-center '>
-      {todo.name ? <h1>Hello {props.name}</h1> : <h1>Welcome stranger!</h1>}
-      <AddTodo setTodo={setTodos} />
-      {todos.map((item, index) => (
-        <TodoList key={index} id={item.id} title={item.title} content={item.content} setTodos={setTodos} />
-      ))}
+    <div className='text-md w-screen h-screen  flex flex-col justify-center items-center  '>
+      <div className='w-screen p-48 h-full flex flex-col justify-center items-center'>
+        {/* {todo.name ? <h1>Hello {props.name}</h1> : <h1>Welcome stranger!</h1>} */}
+        <h1 className='text-lg text-black text-left w-full ml-28 mb-8'>Welcome on board Stranger!</h1>
+
+        <AddTodo setTodo={setTodos} />
+        <div className="w-full  h-full flex flex-row  flex-wrap justify-evenly items-center px-auto">
+          {todos.map((item, index) => (
+            <TodoList key={index} id={item.id} title={item.title} content={item.content} setTodos={setTodos} />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
