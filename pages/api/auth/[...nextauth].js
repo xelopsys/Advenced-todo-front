@@ -10,4 +10,7 @@ export default NextAuth({
         }),
         // ...add more providers here
     ],
+    jwt: {
+        signinKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    }
 })

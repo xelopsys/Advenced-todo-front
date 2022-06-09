@@ -38,7 +38,7 @@ export default function Home({ todo }) {
       )
     }
   }, [todo, session])
-
+  console.log(session)
   // console.log('TODODS:', todos)
   return (
     <div className='text-md w-screen h-screen  flex flex-col justify-center items-center  '>
