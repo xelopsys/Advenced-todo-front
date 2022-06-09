@@ -3,30 +3,67 @@ import TodoList from './TodoList'
 import axios from 'axios'
 import qs from 'qs'
 
-export default function AddTodo(props) {
+async function getServerSideProps() {
+    const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
+    // console.log(todos)
+    const todo = todos.data
+    return todo.reverse()
+}
+
+export default function AddTodo({ setTodo }) {
+
 
     // console.log(idList())
-    const [todos, setTodos] = useState([])
+    // const [todos, setTodos] = useState([])
     const [id, setId] = useState(1)
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
+
+
+
+    const handleClick = async () => {
+
+        // console.log(todo)
+        if (title || content) {
+
+            await axios('http://localhost:3002/todo/create', {
+                method: 'POST',
+                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                data: qs.stringify({
+                    id: id,
+                    title: title,
+                    content: content
+                }),
+
+            })
+                .then(async res => {
+                    setTodo(await getServerSideProps());
+                    // console.log(res)
+                })
+                .catch(err => console.log(err.message))
+
+        }
+
+        setTitle("")
+        setContent("")
+
+
+
+    }
 
     useEffect(() => {
         async function fetchData() {
             await axios.get('http://localhost:3002/todo')
                 .then(res => {
-                    setTodos(res.data.data)
+                    // setId(res.data.data.length + 1)
+                    setId(res.data.data.length > 0 ? Math.max(...res.data.data.map(item => item.id)) + 1 : 1)
 
                 })
         }
         fetchData()
 
 
-    }, [])
-
-    const autoId = () => {
-        return todos.length + 1
-    }
+    }, [handleClick])
 
 
 
@@ -62,50 +99,12 @@ export default function AddTodo(props) {
     //     }
     // }
 
-    const handleClick = async () => {
 
-        console.log(todos)
-        if (title || content) {
-            await axios('http://localhost:3002/todo/create', {
-                method: 'POST',
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
-                data: qs.stringify({
-                    id: id,
-                    title: title,
-                    content: content
-                }),
-
-            }).catch(function (error) {
-                if (error.response) {
-                    // Request made and server responded
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-            })
-        }
-
-        setTitle("")
-        setContent("")
-        setId(autoId())
-
-
-
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log(todos)
+        // console.log(todo)
     }
-
-
-
 
 
     const handleChange = (e) => {
@@ -118,77 +117,21 @@ export default function AddTodo(props) {
 
         }
     }
-    const handleDelete = async (id) => {
 
-        await axios('http://localhost:3002/todo/delete', {
-            method: 'DELETE',
-            headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            data: qs.stringify({
-                id: id
-            }),
-        })
-
-            .catch(function (error) {
-                if (error.response) {
-                    // Request made and server responded
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', error.message);
-                }
-            })
-    }
-
-
-    // const handleKeyPress = (e) => {
-    //     if (e.key === 'Enter') {
-    //         handleSubmit(e)
-    //     }
+    // const handleUpdate = async (id) => {
+    //     await axios('http://localhost:3002/todo/update', {
+    //         method: 'PUT',
+    //         headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    //         data: qs.stringify({
+    //             id: id,
+    //             title: title,
+    //             content: content
+    //         }),
+    //     }).then(async (res) => {
+    //         setTodo(await getServerSideProps())
+    //         // console.log(res)
+    //     })
     // }
-
-    // const handleUpdateChange = (e) => {
-    //     if (e.target.name === 'title') {
-    //         setTitle(e.target.value)
-    //     } else {
-    //         setContent(e.target.value)
-    //     }
-    // }
-
-
-    // const handleUpdateKeyPress = (e) => {
-    //     if (e.key === 'Enter') {
-    //         handleUpdate(e)
-    //     }
-    // }
-
-    // const handleUpdateClick = (id) => {
-    //     const todo = todos.find(todo => todo.id === id)
-    //     setTitle(todo.title)
-    //     setContent(todo.content)
-    // }
-
-    // const handleCancelClick = () => {
-    //     setTitle('')
-    //     setContent('')
-    // }
-
-    // const handleCancelUpdateClick = () => {
-    //     setTitle('')
-    //     setContent('')
-    // }
-
-    // const handleEditClick = (id) => {
-    //     const todo = todos.find(todo => todo.id === id)
-    //     setTitle(todo.title)
-    //     setContent(todo.content)
-    // }
-
-
 
     return (
         <Fragment>
@@ -196,12 +139,13 @@ export default function AddTodo(props) {
                 <span>{id}</span>
                 <input name="title" value={title} onChange={handleChange} placeholder="title" />
                 <input name="content" value={content} onChange={handleChange} placeholder="content" />
-                <button type="submit" onClick={handleClick}>Add</button>
-                {todos.map((todo, index) => (
-                    <TodoList key={index} id={todo.id} title={todo.title} content={todo.content} onDelete={handleDelete} />
-                ))}
-                {/* <Todo id={id} title={title} content={content} onDelete={handleDelete} onUpdate={handleUpdate} /> */}
+                <button type="submit" onClick={handleClick}>
+                    {/* <a href="/">Add</a> */}
+                    Add
+                </button>
             </form>
         </Fragment>
     )
 }
+
+
