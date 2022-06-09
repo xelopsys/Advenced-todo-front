@@ -7,7 +7,7 @@ async function getServerSideProps() {
     const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
     // console.log(todos)
     const todo = todos.data
-    return todo.reverse()
+    return todo
 }
 
 export default function TodoList({ id, title, content, setTodos }) {
@@ -67,15 +67,15 @@ export default function TodoList({ id, title, content, setTodos }) {
                 <>
                     <div className="w-full h-full flex flex-col justify-center pt-4 ">
                         <span className='w-12 h-12 rounded-full bg-yellow-300 text-black flex flex-row justify-center items-center mx-auto p-4'>{id}</span>
-                        <h1 className='w-full break-words h-12 rounded p-4 border-b'> Title: {' " '}{title}{' " '}</h1>
-                        <p className='w-full break-words h-12 rounded p-4 '>Content: {' " '}{content}{' " '}</p>
+                        <h1 className='w-full break-words h-12 rounded py-4 border-b'> Title: {' " '}{title}{' " '}</h1>
+                        <p className='w-full break-words h-12 rounded py-4 '>Content: {' " '}{content}{' " '}</p>
                     </div>
 
                     <div className='w-full h-full flex flex-row justify-evenly items-center my-4'>
-                        <button className=' rounded w-1/3 h-12 p-4 m-2 shadow-lg bg-black hover:bg-gray-600 flex flex-row justify-center items-center text-white' onClick={() => handleDelete(id)}>
+                        <button className=' rounded w-1/3 h-12 py-4 my-2 shadow-lg bg-black hover:bg-gray-600 flex flex-row justify-center items-center text-white' onClick={() => handleDelete(id)}>
                             Delete
                         </button>
-                        <button className=' rounded w-1/3 h-12 p-4 m-2 shadow-lg bg-yellow-400 hover:bg-yellow-700 flex flex-row justify-center items-center text-black' onClick={() => setIsEdit(true)}>Edit</button>
+                        <button className=' rounded w-1/3 h-12 py-4 my-2 shadow-lg bg-yellow-400 hover:bg-yellow-700 flex flex-row justify-center items-center text-black' onClick={() => setIsEdit(true)}>Edit</button>
                     </div>
 
                 </>

@@ -6,7 +6,7 @@ import qs from 'qs'
 async function getServerSideProps() {
     const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
     const todo = todos.data
-    return todo.reverse()
+    return todo
 }
 
 export default function AddTodo({ setTodo }) {
@@ -101,10 +101,10 @@ export default function AddTodo({ setTodo }) {
 
     return (
         <Fragment>
-            <form className='w-11/12 h-full flex flex-col justify-center items-center sm:flex-col md:flex-row lg:flex-col' onSubmit={(e) => { e.preventDefault() }}>
+            <form className='w-full  mb-6 h-full flex flex-col justify-center items-center sm:flex-col md:flex-row lg:flex-col' onSubmit={(e) => { e.preventDefault() }}>
                 <span className='w-12 h-12 rounded-full bg-red-500 text-white flex flex-row justify-center items-center mx-6 p-2'>{id}</span>
-                <input className='w-full h-12 border-b p-4 m-2 focus:outline-red-500' name="title" value={title} onChange={handleChange} placeholder="title" />
-                <input className='w-full h-12  p-4 m-2 focus:outline-red-500' name="content" value={content} onChange={handleChange} placeholder="content" />
+                <input className='w-full h-12 rounded border-b p-4 m-2 focus:outline-red-500' name="title" value={title} onChange={handleChange} placeholder="title" />
+                <input className='w-full h-12 rounded p-4 m-2 focus:outline-red-500' name="content" value={content} onChange={handleChange} placeholder="content" />
                 <button type="submit" className=' rounded w-1/2 h-12 p-4 m-2 shadow-lg bg-red-500 hover:bg-red-900 flex flex-row justify-center items-center text-white' onClick={handleClick}>
                     Add
                 </button>
