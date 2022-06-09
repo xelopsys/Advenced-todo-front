@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 
 
 export async function getServerSideProps() {
-  const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
+  const todos = await axios.get(process.env.API).then(res => { return res.data })
   const todo = todos.data
   return {
     props: {
@@ -25,7 +25,7 @@ export default function Home({ todo }) {
 
   useEffect(() => {
     async function fetchData() {
-      await axios.get('http://localhost:3002/todo')
+      await axios.get(process.env.API)
         .then(res => {
           setTodos(res.data.data)
         })

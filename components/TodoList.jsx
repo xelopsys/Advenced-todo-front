@@ -4,7 +4,7 @@ import qs from 'qs';
 import Link from 'next/link';
 
 async function getServerSideProps() {
-    const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
+    const todos = await axios.get(process.env.API).then(res => { return res.data })
     // console.log(todos)
     const todo = todos.data
     return todo
@@ -27,7 +27,7 @@ export default function TodoList({ id, title, content, setTodos }) {
 
     async function handleDelete(id) {
 
-        await axios('http://localhost:3002/todo/delete', {
+        await axios(process.env.API, {
             method: 'DELETE',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: qs.stringify({
@@ -41,7 +41,7 @@ export default function TodoList({ id, title, content, setTodos }) {
     }
 
     async function handleUpdate(id) {
-        await axios('http://localhost:3002/todo/update', {
+        await axios(process.env.API, {
             method: 'PATCH',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: qs.stringify(

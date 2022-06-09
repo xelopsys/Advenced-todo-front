@@ -4,7 +4,7 @@ import axios from 'axios'
 import qs from 'qs'
 
 async function getServerSideProps() {
-    const todos = await axios.get('http://localhost:3002/todo').then(res => { return res.data })
+    const todos = await axios.get(process.env.API).then(res => { return res.data })
     const todo = todos.data
     return todo
 }
@@ -19,7 +19,7 @@ export default function AddTodo({ setTodo }) {
     const handleClick = async () => {
         if (title || content) {
 
-            await axios('http://localhost:3002/todo/create', {
+            await axios(process.env.API, {
                 method: 'POST',
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
                 data: qs.stringify({
@@ -42,7 +42,7 @@ export default function AddTodo({ setTodo }) {
 
     useEffect(() => {
         async function fetchData() {
-            await axios.get('http://localhost:3002/todo')
+            await axios.get(process.env.API)
                 .then(res => {
                     setId(res.data.data.length > 0 ? Math.max(...res.data.data.map(item => item.id)) + 1 : 1)
                 })
