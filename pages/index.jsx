@@ -4,10 +4,10 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react';
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from 'next/router'
-
+import { config } from '../config';
 
 export async function getServerSideProps() {
-  const todos = await axios.get(process.env.API).then(res => { return res.data })
+  const todos = await axios.get(config.API || process.env.API).then(res => { return res.data })
   const todo = todos.data
   return {
     props: {
@@ -25,7 +25,7 @@ export default function Home({ todo }) {
 
   useEffect(() => {
     async function fetchData() {
-      await axios.get(process.env.API)
+      await axios.get(config.API || process.env.API)
         .then(res => {
           setTodos(res.data.data)
         })
@@ -38,7 +38,7 @@ export default function Home({ todo }) {
       )
     }
   }, [todo, session])
-  console.log(session)
+
   // console.log('TODODS:', todos)
   return (
     <div className='text-md w-screen h-screen  flex flex-col justify-center items-center  '>

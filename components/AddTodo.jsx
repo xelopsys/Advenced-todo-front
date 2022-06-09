@@ -2,9 +2,10 @@ import React, { useState, useEffect, Fragment, useRef } from 'react'
 import TodoList from './TodoList'
 import axios from 'axios'
 import qs from 'qs'
+import { config } from '../config';
 
 async function getServerSideProps() {
-    const todos = await axios.get(process.env.API).then(res => { return res.data })
+    const todos = await axios.get(config.API || process.env.API).then(res => { return res.data })
     const todo = todos.data
     return todo
 }
@@ -19,7 +20,7 @@ export default function AddTodo({ setTodo }) {
     const handleClick = async () => {
         if (title || content) {
 
-            await axios(process.env.API, {
+            await axios(config.API || process.env.API, {
                 method: 'POST',
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
                 data: qs.stringify({
@@ -42,7 +43,7 @@ export default function AddTodo({ setTodo }) {
 
     useEffect(() => {
         async function fetchData() {
-            await axios.get(process.env.API)
+            await axios.get(config.API || process.env.API)
                 .then(res => {
                     setId(res.data.data.length > 0 ? Math.max(...res.data.data.map(item => item.id)) + 1 : 1)
                 })

@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import qs from 'qs';
 import Link from 'next/link';
+import { config } from '../config';
 
 async function getServerSideProps() {
-    const todos = await axios.get(process.env.API).then(res => { return res.data })
+    const todos = await axios.get(config.API || process.env.API).then(res => { return res.data })
     // console.log(todos)
     const todo = todos.data
     return todo
@@ -27,7 +28,7 @@ export default function TodoList({ id, title, content, setTodos }) {
 
     async function handleDelete(id) {
 
-        await axios(process.env.API, {
+        await axios(config.API || process.env.API, {
             method: 'DELETE',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: qs.stringify({
@@ -41,7 +42,7 @@ export default function TodoList({ id, title, content, setTodos }) {
     }
 
     async function handleUpdate(id) {
-        await axios(process.env.API, {
+        await axios(config.API || process.env.API, {
             method: 'PATCH',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: qs.stringify(
