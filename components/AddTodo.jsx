@@ -20,7 +20,7 @@ export default function AddTodo({ setTodo }) {
     const handleClick = async () => {
         if (title || content) {
 
-            await axios(config.API || process.env.API, {
+            await axios(config.API + "/create" || process.env.API + "/create", {
                 method: 'POST',
                 headers: { 'content-type': 'application/x-www-form-urlencoded' },
                 data: qs.stringify({

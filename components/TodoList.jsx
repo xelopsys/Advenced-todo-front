@@ -28,7 +28,7 @@ export default function TodoList({ id, title, content, setTodos }) {
 
     async function handleDelete(id) {
 
-        await axios(config.API || process.env.API, {
+        await axios(config.API + "/delete" || process.env.API + "/delete", {
             method: 'DELETE',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: qs.stringify({
@@ -42,7 +42,7 @@ export default function TodoList({ id, title, content, setTodos }) {
     }
 
     async function handleUpdate(id) {
-        await axios(config.API || process.env.API, {
+        await axios(config.API + "/update" || process.env.API + "/update", {
             method: 'PATCH',
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: qs.stringify(
